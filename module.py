@@ -26,7 +26,7 @@ class Residual(nn.Module):
         Y = self.relu1(Y)
         Y = self.conv2(Y)
         Y = self.bn2(Y)
-        Y = self.relu2(Y)
+        # Y = self.relu2(Y)
         if self.use_conv1:
             identity = self.shortcut(identity)
         Y += identity
@@ -51,11 +51,11 @@ class ResNet(nn.Module):
             nn.LazyLinear(num_classes)
         )
         self.net.add_module('FirstBlk', self.fist_blk)
-        self.net.add_module('ResidualModule', self.residual_blk)
-        self.net.add_module('Last', self.output_blk)
 
     def forward(self, X):
-        X = self.net(X)
+        X = self.fist_blk(X)
+        X = self.residual_blk(X)
+        X = self.output_blk(X)
         return X
 
     @staticmethod
